@@ -4,6 +4,7 @@ import { useParcels } from "../context/ParcelsContext";
 import { Feature, GeoJsonProperties, Geometry } from "geojson";
 import { Layer } from "leaflet";
 import Spinner from "./Spinner";
+import { ZoningType } from "../types/parcelTypes";
 
 const ParcelMap: React.FC = () => {
   const {
@@ -15,8 +16,6 @@ const ParcelMap: React.FC = () => {
     isLoading,
     error,
   } = useParcels();
-
-  type ZoningType = "Residential" | "Commercial" | "Industrial";
 
   const zoningColors = useMemo(
     () => ({
@@ -68,14 +67,22 @@ const ParcelMap: React.FC = () => {
     [toggleParcel, setHoveredParcel]
   );
 
-  // TODO: Style
   if (isLoading) {
-    return <Spinner />;
+    return (
+      <div className="flex-1">
+        <Spinner />;
+      </div>
+    );
   }
 
-  // TODO: Style
   if (error) {
-    return <p className="text-red-500">Error: {error}</p>;
+    return (
+      <div className="flex-1 ">
+        <p className="flex justify-center items-center h-full text-red-500">
+          Error: {error}
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -90,6 +97,8 @@ const ParcelMap: React.FC = () => {
       />
       {data && (
         <GeoJSON
+          // REVIEW: Performance
+          key={JSON.stringify(data)}
           data={data}
           style={parcelStyle}
           onEachFeature={onEachFeature}
