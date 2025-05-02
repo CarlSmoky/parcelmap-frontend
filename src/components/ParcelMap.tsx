@@ -5,6 +5,7 @@ import { Feature, GeoJsonProperties, Geometry } from "geojson";
 import { Layer } from "leaflet";
 import Spinner from "./Spinner";
 import { ZoningType } from "../types/parcelTypes";
+import { zoningColors } from "../constants/zoningColors";
 
 const ParcelMap: React.FC = () => {
   const {
@@ -16,16 +17,6 @@ const ParcelMap: React.FC = () => {
     isLoading,
     error,
   } = useParcels();
-
-  const zoningColors = useMemo(
-    () => ({
-      Residential: "#60A5FA",
-      Commercial: "#34D399",
-      Industrial: "#F87171",
-      UnKnown: "#FBBF24",
-    }),
-    []
-  );
 
   // REVIEW: feature is optional
   const parcelStyle = useMemo(
@@ -50,7 +41,7 @@ const ParcelMap: React.FC = () => {
         weight: isHovered ? 3 : 1,
         color: isHovered ? "#666" : "white",
         dashArray: isHovered ? "" : "3",
-        fillOpacity: isSelected ? 1 : isHovered ? 0.9 : 0.7,
+        fillOpacity: isSelected ? 1 : isHovered ? 1 : 0.7,
       };
     },
     [zoningColors, selectedParcels, hoveredParcel]

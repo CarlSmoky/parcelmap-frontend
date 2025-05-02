@@ -22,6 +22,8 @@ export interface ParcelsContextType {
 
 export interface ParcelProperties {
   id: number;
-  zoning_typ: string;
-  [key: string]: any; // REVIEW: Add other properties as needed
+  zoning_typ: ZoningType;
+  parcelnumb: string;
+  name: string;
+  // [key: string]: any; // REVIEW: Add other properties as needed
 }

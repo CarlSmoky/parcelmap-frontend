@@ -18,7 +18,7 @@ const ParcelSelectionList: React.FC = () => {
             (feature) => feature.properties.id === id
           )?.properties;
 
-          return <ParcelSelectionItem key={id} id={id} parcel={parcel} />;
+          return <ParcelSelectionItem key={id} parcel={parcel} />;
         })}
       </ul>
     </div>
