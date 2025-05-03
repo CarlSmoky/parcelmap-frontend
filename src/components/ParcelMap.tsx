@@ -4,6 +4,8 @@ import { useParcels } from "../context/ParcelsContext";
 import { Feature, GeoJsonProperties, Geometry } from "geojson";
 import { Layer } from "leaflet";
 import Spinner from "./Spinner";
+import { ZoningType } from "../types/parcelTypes";
+import { zoningColors } from "../constants/zoningColors";
 
 const ParcelMap: React.FC = () => {
   const {
@@ -15,18 +17,6 @@ const ParcelMap: React.FC = () => {
     isLoading,
     error,
   } = useParcels();
-
-  type ZoningType = "Residential" | "Commercial" | "Industrial";
-
-  const zoningColors = useMemo(
-    () => ({
-      Residential: "#60A5FA",
-      Commercial: "#34D399",
-      Industrial: "#F87171",
-      UnKnown: "#FBBF24",
-    }),
-    []
-  );
 
   // REVIEW: feature is optional
   const parcelStyle = useMemo(
@@ -51,7 +41,7 @@ const ParcelMap: React.FC = () => {
         weight: isHovered ? 3 : 1,
         color: isHovered ? "#666" : "white",
         dashArray: isHovered ? "" : "3",
-        fillOpacity: isSelected ? 1 : isHovered ? 0.9 : 0.7,
+        fillOpacity: isSelected ? 1 : isHovered ? 1 : 0.7,
       };
     },
     [zoningColors, selectedParcels, hoveredParcel]
@@ -68,14 +58,22 @@ const ParcelMap: React.FC = () => {
     [toggleParcel, setHoveredParcel]
   );
 
-  // TODO: Style
   if (isLoading) {
-    return <Spinner />;
+    return (
+      <div className="flex-1">
+        <Spinner />;
+      </div>
+    );
   }
 
-  // TODO: Style
   if (error) {
-    return <p className="text-red-500">Error: {error}</p>;
+    return (
+      <div className="flex-1 ">
+        <p className="flex justify-center items-center h-full text-red-500">
+          Error: {error}
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -90,6 +88,8 @@ const ParcelMap: React.FC = () => {
       />
       {data && (
         <GeoJSON
+          // REVIEW: Performance
+          key={JSON.stringify(data)}
           data={data}
           style={parcelStyle}
           onEachFeature={onEachFeature}
