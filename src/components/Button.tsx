@@ -14,7 +14,11 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
 }) => {
   return (
-    <button onClick={onClick} className={`px-4 py-2 rounded ${className}`}>
+    <button
+      onClick={onClick}
+      className={`px-4 py-2 rounded ${className}`}
+      disabled={disabled}
+    >
       {children}
     </button>
   );
