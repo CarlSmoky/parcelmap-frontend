@@ -11,8 +11,8 @@ const ZoningTypeSelector: React.FC<ZoningTypeSelectorProps> = ({
   setNewZoningType,
 }) => {
   return (
-    <div className="border-t border-gray-300 pt-4">
-      <label className="block mb-2 font-semibold">Zoning Type:</label>
+    <div className="flex items-center">
+      <label className="block mb-2 font-semibold w-44">Zoning Type:</label>
       <select
         value={newZoningType}
         onChange={(e) => setNewZoningType(e.target.value as ZoningType)}

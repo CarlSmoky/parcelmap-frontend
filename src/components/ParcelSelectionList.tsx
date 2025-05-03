@@ -3,14 +3,18 @@ import { useParcels } from "../context/ParcelsContext";
 import ParcelSelectionItem from "./ParcelSelectionItem";
 
 const ParcelSelectionList: React.FC = () => {
-  const { selectedParcels, data } = useParcels();
+  const { selectedParcels, data, toggleParcel } = useParcels();
 
   if (selectedParcels.length === 0) {
     return <p>Select a parcel on the map to see details.</p>;
   }
 
+  const handleUnselect = (id: number) => {
+    toggleParcel(id);
+  };
+
   return (
-    <div>
+    <div className="mt-4 mb-4 p-2">
       <h3 className="text-lg font-semibold mb-2">Selected Parcels</h3>
       <ul className="mb-4">
         {selectedParcels.map((id) => {
@@ -18,7 +22,13 @@ const ParcelSelectionList: React.FC = () => {
             (feature) => feature.properties.id === id
           )?.properties;
 
-          return <ParcelSelectionItem key={id} parcel={parcel} />;
+          return (
+            <ParcelSelectionItem
+              key={id}
+              parcel={parcel}
+              onUnselect={handleUnselect}
+            />
+          );
         })}
       </ul>
     </div>
