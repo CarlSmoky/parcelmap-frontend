@@ -10,9 +10,11 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ParcelsProvider>
-        <div className="flex flex-col md:flex-row h-screen">
-          <ParcelMap />
-          <div className="w-96 bg-white border-l p-4 overflow-y-auto">
+        <div className="flex flex-col md:flex-row h-screen overflow-y-auto">
+          <div className="flex-1 h-1/2 min-h-80 md:h-full">
+            <ParcelMap />
+          </div>
+          <div className="w-full md:w-[400px] bg-white">
             <InfoPane />
           </div>
         </div>

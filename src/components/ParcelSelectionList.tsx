@@ -10,7 +10,7 @@ const ParcelSelectionList: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="mt-4 mb-4 p-2">
       <h3 className="text-lg font-semibold mb-2">Selected Parcels</h3>
       <ul className="mb-4">
         {selectedParcels.map((id) => {

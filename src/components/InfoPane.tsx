@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useParcels } from "../context/ParcelsContext";
 import { ZoningType } from "../types/parcelTypes";
-import Button from "./Button";
 import ParcelSelectionList from "./ParcelSelectionList";
-import ZoningTypeSelector from "./ZoningTypeSelector";
 import { API_BASE_URL } from "../config";
 import Spinner from "./Spinner";
 import { MESSAGES } from "../constants/messsage";
 import { MessageType } from "../types/messageTypes";
+import SelectedParcelStats from "./SelectedParcelStats";
+import UpdateZoningType from "./UpdateZoningType";
+import MessageBox from "./MessageBox";
 
 const InfoPane: React.FC = () => {
   const { selectedParcels, data, clearSelection, refetch } = useParcels();
@@ -17,6 +18,30 @@ const InfoPane: React.FC = () => {
     text: string;
     type: MessageType;
   } | null>(null);
+
+  // Calculate zoning type counts for selected parcels
+  const zoningTypeCounts = useMemo(() => {
+    if (!data || selectedParcels.length === 0) return null;
+
+    const uniqueSelectedParcels = Array.from(new Set(selectedParcels));
+
+    // Filter features based on unique selected parcels
+    const selectedFeatures = data.features.filter((feature) =>
+      uniqueSelectedParcels.includes(feature.properties.id)
+    );
+
+    const counts: Record<string, number> = {};
+
+    // Iterate over selected features and count zoning types
+    selectedFeatures.forEach((feature) => {
+      const zoningType = feature.properties.zoning_typ || "Unknown";
+      counts[zoningType] = (counts[zoningType] || 0) + 1;
+    });
+
+    return counts;
+  }, [data, selectedParcels]);
+
+  const totalSelectedParcels = selectedParcels.length;
 
   const handleUpdateZoningType = async () => {
     if (!newZoningType) {
@@ -97,57 +122,44 @@ const InfoPane: React.FC = () => {
   };
 
   return (
-    <div className="w-80 bg-white border-l p-4 overflow-y-auto">
+    <div className="w-full h-full overflow-y-auto bg-white p-4 border-t md:border-l border-gray-300">
       <h2 className="text-xl font-bold mb-4">Parcel Info</h2>
-
-      {message && (
-        <div
-          className={`mb-4 p-2 rounded ${
-            message.type === "success"
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
-          }`}
-        >
-          {message.text}
-          <Button
-            onClick={() => setMessage(null)}
-            className="mt-2 px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
-          >
-            OK
-          </Button>
-        </div>
-      )}
 
       {selectedParcels.length === 0 ? (
         <p>Select a parcel on the map to see details.</p>
       ) : (
         <>
-          <h3 className="text-lg font-semibold mb-2">Update Zoning Type</h3>
-          <ZoningTypeSelector
+          <SelectedParcelStats
+            totalSelectedParcels={totalSelectedParcels}
+            zoningTypeCounts={zoningTypeCounts}
+          />
+
+          <UpdateZoningType
             newZoningType={newZoningType}
             setNewZoningType={setNewZoningType}
+            handleUpdateZoningType={handleUpdateZoningType}
+            clearHandler={clearHandler}
+            isUpdating={isUpdating}
           />
-          <div className="flex gap-2">
-            <Button
-              onClick={handleUpdateZoningType}
-              className={`bg-blue-500 text-white ${
-                isUpdating ? "opacity-50" : ""
-              }`}
-              disabled={isUpdating}
-            >
-              {isUpdating ? "Updating..." : "Update All"}
-            </Button>
-            <Button
-              onClick={clearHandler}
-              className={`bg-blue-500 text-white ${
-                isUpdating ? "opacity-50" : ""
-              }`}
-              disabled={isUpdating}
-            >
-              Clear Selection
-            </Button>
+
+          <div className={`mb-4 min-h-24`}>
+            {message && (
+              <MessageBox
+                message={message}
+                onClear={clearHandler}
+                isUpdating={isUpdating}
+                setMessage={setMessage}
+              />
+            )}
           </div>
-          {isUpdating ? <Spinner /> : <ParcelSelectionList />}
+
+          {isUpdating ? (
+            <div className="flex justify-center items-center h-40">
+              <Spinner />
+            </div>
+          ) : (
+            <ParcelSelectionList />
+          )}
         </>
       )}
     </div>

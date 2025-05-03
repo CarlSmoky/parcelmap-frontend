@@ -1,5 +1,6 @@
 import { Feature, FeatureCollection, Geometry } from "geojson";
 import { API_BASE_URL } from "../config";
+import { filterByHighestIdForSharedGeometries } from "../utils/geometryUtils";
 
 interface ParcelProperties {
   id: string;
@@ -27,7 +28,12 @@ export const fetchParcels = async (): Promise<
     },
   });
   if (!response.ok) {
-    throw new Error("Failed to fetch parcels");
+    console.error(
+      "Error fetching parcels:",
+      response.status,
+      response.statusText
+    );
+    throw new Error(`Failed to fetch parcel data (Error: ${response.status}).`);
   }
   const parcels: ParcelApiResponse[] = await response.json();
 
@@ -44,8 +50,10 @@ export const fetchParcels = async (): Promise<
     })
   );
 
+  const uniqueFeatures = filterByHighestIdForSharedGeometries(features);
+
   return {
     type: "FeatureCollection",
-    features,
+    features: uniqueFeatures,
   };
 };

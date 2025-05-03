@@ -6,6 +6,8 @@ import { Layer } from "leaflet";
 import Spinner from "./Spinner";
 import { ZoningType } from "../types/parcelTypes";
 import { zoningColors } from "../constants/zoningColors";
+import { ERROR_MESSAGE } from "../constants/messsage";
+import { combinedAttribution, tileLayers } from "../constants/mapLayers";
 
 const ParcelMap: React.FC = () => {
   const {
@@ -23,11 +25,10 @@ const ParcelMap: React.FC = () => {
     () => (feature?: Feature<Geometry, GeoJsonProperties>) => {
       if (!feature || !feature.properties) {
         return {
-          fillColor: "#D1D5DB", // ToDO: change color
+          fillColor: "#D1D5DB",
           weight: 1,
           color: "white",
-          dashArray: "3",
-          fillOpacity: 0.5,
+          fillOpacity: 0.1,
         };
       }
 
@@ -38,10 +39,9 @@ const ParcelMap: React.FC = () => {
 
       return {
         fillColor: baseColor,
-        weight: isHovered ? 3 : 1,
-        color: isHovered ? "#666" : "white",
-        dashArray: isHovered ? "" : "3",
-        fillOpacity: isSelected ? 1 : isHovered ? 1 : 0.7,
+        weight: isHovered ? (isSelected ? 6 : 3) : isSelected ? 4 : 1,
+        color: isSelected ? "gray" : isHovered ? "yellow" : "white",
+        fillOpacity: isSelected ? 1 : isHovered ? 1 : 0.6,
       };
     },
     [zoningColors, selectedParcels, hoveredParcel]
@@ -68,9 +68,9 @@ const ParcelMap: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex-1 ">
-        <p className="flex justify-center items-center h-full text-red-500">
-          Error: {error}
+      <div className="flex-1">
+        <p className="flex justify-center items-center h-full p-4 text-red-500">
+          {ERROR_MESSAGE}
         </p>
       </div>
     );
@@ -79,12 +79,12 @@ const ParcelMap: React.FC = () => {
   return (
     <MapContainer
       center={[32.964735, -96.790005]} // (Dallas)
-      zoom={15}
-      style={{ height: "100vh", width: "100%" }}
+      zoom={16}
+      style={{ height: "100%", width: "100%" }}
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution={combinedAttribution}
+        url={tileLayers.stadiaMaps.url}
       />
       {data && (
         <GeoJSON

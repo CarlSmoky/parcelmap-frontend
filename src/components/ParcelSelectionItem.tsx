@@ -14,7 +14,7 @@ const ParcelSelectionItem: React.FC<ParcelSelectionItemProps> = ({
     zoningColors.UnKnown;
   return (
     <li
-      className="mb-2 border p-2 rounded bg-gray-100"
+      className="m-2 border p-2 rounded bg-gray-100"
       style={{ borderColor, borderWidth: "2px", borderStyle: "solid" }}
     >
       <strong>Number:</strong> {parcel?.parcelnumb} <br />

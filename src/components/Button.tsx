@@ -4,20 +4,24 @@ interface ButtonProps {
   onClick: () => void;
   children: React.ReactNode;
   className?: string;
-  disabled?: boolean;
+  isUpdating?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
   onClick,
   children,
   className,
-  disabled = false,
+  isUpdating = false,
 }) => {
   return (
     <button
       onClick={onClick}
-      className={`px-4 py-2 rounded ${className}`}
-      disabled={disabled}
+      className={`w-1/2 rounded bg-purple-500 text-white text-sm ${className} ${
+        isUpdating
+          ? "opacity-50"
+          : "hover:bg-purple-600 hover:shadow-lg transition-transform duration-300 ease-in-out"
+      }`}
+      disabled={isUpdating}
     >
       {children}
     </button>
