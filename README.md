@@ -39,12 +39,6 @@ This is the React-based frontend ParcelMap application for visualizing and manag
    npm run build
    ```
 
-4. **Preview the Production Build**:
-   To preview the production build locally, run:
-   ```bash
-   npm run preview
-   ```
-
 ## Environment Variables
 
 - Configure the API base URL in the `.env` file:
