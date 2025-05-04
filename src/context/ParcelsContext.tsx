@@ -30,7 +30,6 @@ export const ParcelsProvider: React.FC<{ children: React.ReactNode }> = ({
       >,
   });
 
-  // Memoize the toggleParcel function
   const toggleParcel = useCallback((id: number) => {
     setSelectedParcels((prevSelected) =>
       prevSelected.includes(id)

@@ -1,12 +1,57 @@
-# React + Vite
+# Parcel Map Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the React-based frontend ParcelMap application for visualizing and managing parcel data from Leaflet.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Interactive map to view parcels
+- Selects multiple parcels, display their details, and update zoning their types
+- Display and update zoning type counts
 
-## Expanding the ESLint configuration
+## Production url
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+[Parcel Map Frontend](https://parcelmap-frontend.vercel.app/)
+
+## Prerequisites
+
+- Node.js and npm installed on your system
+
+## How to Run the System
+
+1. **Install Dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+2. **Start the Development Server**:
+
+   ```bash
+   npm run dev
+   ```
+
+   This will start the application and open it in your default browser.
+
+3. **Build for Production**:
+   To create a production build, run:
+
+   ```bash
+   npm run build
+   ```
+
+4. **Preview the Production Build**:
+   To preview the production build locally, run:
+   ```bash
+   npm run preview
+   ```
+
+## Environment Variables
+
+- Configure the API base URL in the `.env` file:
+  ```env
+  VITE_API_BASE_URL=http://localhost:3001/api
+  ```
+
+## Development Assumptions
+
+There are many instance in the returned data where multiple parcels appear to share the same geoJSON data. In the these cases, I have assumed that the most recent entry (i.e. the one with the highest unique table id) to be the current one. Earlier parcel entries that share the same coordinates have been filtered out
