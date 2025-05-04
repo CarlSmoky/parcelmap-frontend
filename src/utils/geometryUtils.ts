@@ -1,14 +1,7 @@
 import { Feature, Geometry } from "geojson";
 
-/**
- * Filters a list of GeoJSON features to ensure that only the feature with the highest `id`
- * is retained for each unique geometry.
- *
- * @template T - The type of the feature properties, which must include an `id` field.
- * @param features - An array of GeoJSON features to filter.
- * @returns A new array of GeoJSON features, where each geometry is unique and only the feature
- *          with the highest `id` is retained for duplicate geometries.
- */
+// Because there are multiple parcels that share the same geometry, we need to filter them
+// to only keep the one with the highest id, else they will display on top of each other
 export const filterByHighestIdForSharedGeometries = <T extends { id: string }>(
   features: Feature<Geometry, T>[]
 ): Feature<Geometry, T>[] => {

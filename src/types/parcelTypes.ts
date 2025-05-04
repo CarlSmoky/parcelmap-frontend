@@ -25,5 +25,4 @@ export interface ParcelProperties {
   zoning_typ: ZoningType;
   parcelnumb: string;
   name: string;
-  // [key: string]: any; // REVIEW: Add other properties as needed
 }

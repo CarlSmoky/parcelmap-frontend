@@ -7,7 +7,7 @@ import Spinner from "./Spinner";
 import { ZoningType } from "../types/parcelTypes";
 import { zoningColors } from "../constants/zoningColors";
 import { ERROR_MESSAGE } from "../constants/messsage";
-import { combinedAttribution, tileLayers } from "../constants/mapLayers";
+import { tileLayers } from "../constants/mapLayers";
 
 const ParcelMap: React.FC = () => {
   const {
@@ -20,7 +20,6 @@ const ParcelMap: React.FC = () => {
     error,
   } = useParcels();
 
-  // REVIEW: feature is optional
   const parcelStyle = useMemo(
     () => (feature?: Feature<Geometry, GeoJsonProperties>) => {
       if (!feature || !feature.properties) {
@@ -83,12 +82,11 @@ const ParcelMap: React.FC = () => {
       style={{ height: "100%", width: "100%" }}
     >
       <TileLayer
-        attribution={combinedAttribution}
+        attribution={tileLayers.stadiaMaps.attribution}
         url={tileLayers.stadiaMaps.url}
       />
       {data && (
         <GeoJSON
-          // REVIEW: Performance
           key={JSON.stringify(data)}
           data={data}
           style={parcelStyle}
