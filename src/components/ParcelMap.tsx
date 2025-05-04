@@ -82,8 +82,8 @@ const ParcelMap: React.FC = () => {
       style={{ height: "100%", width: "100%" }}
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution={tileLayers.stadiaMaps.attribution}
+        url={tileLayers.stadiaMaps.url}
       />
       {data && (
         <GeoJSON
