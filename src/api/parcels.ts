@@ -23,7 +23,7 @@ interface HandleUpdateZoningTypeArgs {
   selectedParcels: number[];
   data: FeatureCollection<Geometry, any> | null;
   newZoningType: ZoningType | "";
-  refetch: any; // TODO: Type this properly
+  refetch: () => Promise<void>;
   setMessage: (message: { text: string; type: MessageType }) => void;
   setIsUpdating: (isUpdating: boolean) => void;
 }

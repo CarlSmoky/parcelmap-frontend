@@ -50,5 +50,3 @@ export const calculateZoningTypeCounts = (
 
   return counts;
 };
-
-// TODO: Consider ZoningTypeEnum. Handling Planned and unknown or undefined cases
