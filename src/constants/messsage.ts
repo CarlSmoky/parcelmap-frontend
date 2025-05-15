@@ -15,6 +15,7 @@ export const MESSAGES = {
   INFO_NO_CHANGES:
     "All selected parcels already have the selected target zoning type.",
   ERROR_NO_ZONING_TYPE: "Please select a zoning type.",
+  ERROR_NO_DATA: "No parcel data available. Please try again later.",
 };
 
 export const ERROR_MESSAGE =

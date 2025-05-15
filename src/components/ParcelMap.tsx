@@ -4,10 +4,9 @@ import { useParcels } from "../context/ParcelsContext";
 import { Feature, GeoJsonProperties, Geometry } from "geojson";
 import { Layer } from "leaflet";
 import Spinner from "./Spinner";
-import { ZoningType } from "../types/parcelTypes";
-import { zoningColors } from "../constants/zoningColors";
 import { ERROR_MESSAGE } from "../constants/messsage";
 import { tileLayers } from "../constants/mapLayers";
+import { getParcelStyle, attachFeatureHandlers } from "../utils/parcelMapUtils";
 
 const ParcelMap: React.FC = () => {
   const {
@@ -21,46 +20,30 @@ const ParcelMap: React.FC = () => {
   } = useParcels();
 
   const parcelStyle = useMemo(
-    () => (feature?: Feature<Geometry, GeoJsonProperties>) => {
-      if (!feature || !feature.properties) {
-        return {
-          fillColor: "#D1D5DB",
-          weight: 1,
-          color: "white",
-          fillOpacity: 0.1,
-        };
-      }
-
-      const zoningType: ZoningType = feature.properties.zoning_typ;
-      const baseColor = zoningColors[zoningType] || zoningColors.UnKnown;
-      const isSelected = selectedParcels.includes(feature.properties.id);
-      const isHovered = hoveredParcel === feature.properties.id;
-
-      return {
-        fillColor: baseColor,
-        weight: isHovered ? (isSelected ? 6 : 3) : isSelected ? 4 : 1,
-        color: isSelected ? "gray" : isHovered ? "yellow" : "white",
-        fillOpacity: isSelected ? 1 : isHovered ? 1 : 0.6,
-      };
-    },
-    [zoningColors, selectedParcels, hoveredParcel]
+    () => (feature?: Feature<Geometry, GeoJsonProperties>) =>
+      getParcelStyle(feature, selectedParcels, hoveredParcel),
+    [selectedParcels, hoveredParcel]
   );
 
+  // Memoized feature handler
   const onEachFeature: GeoJSONProps["onEachFeature"] = useCallback(
-    (feature: Feature, layer: Layer) => {
-      layer.on({
-        click: () => toggleParcel(feature?.properties?.id),
-        mouseover: () => setHoveredParcel(feature?.properties?.id),
-        mouseout: () => setHoveredParcel(null),
-      });
-    },
+    (feature: Feature, layer: Layer) =>
+      attachFeatureHandlers(feature, layer, toggleParcel, setHoveredParcel),
     [toggleParcel, setHoveredParcel]
   );
 
   if (isLoading) {
     return (
-      <div className="flex-1">
+      <div className="flex justify-center items-center h-full p-4">
         <Spinner />;
+      </div>
+    );
+  }
+
+  if (!data && !error) {
+    return (
+      <div className="flex justify-center items-center h-full p-4">
+        <Spinner />
       </div>
     );
   }
@@ -82,8 +65,8 @@ const ParcelMap: React.FC = () => {
       style={{ height: "100%", width: "100%" }}
     >
       <TileLayer
-        attribution={tileLayers.stadiaMaps.attribution}
-        url={tileLayers.stadiaMaps.url}
+        attribution={tileLayers.openstreetmap.attribution}
+        url={tileLayers.openstreetmap.url}
       />
       {data && (
         <GeoJSON
